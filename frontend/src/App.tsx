@@ -284,13 +284,43 @@ export default function App() {
   }, [saved]);
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/snapshot", { signal: controller.signal })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (d?.schema_version) setData(d);
-      })
-      .catch(() => {});
-    return () => controller.abort();
+    let pending = false;
+    const update = () => {
+      if (pending || document.visibilityState === "hidden") return;
+      pending = true;
+      fetch("/api/snapshot", { signal: controller.signal, cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => {
+          if (d?.schema_version)
+            setData((old) => ({
+              ...d,
+              market:
+                Date.parse(old.market.fetched_at || "") >
+                Date.parse(d.market?.fetched_at || "")
+                  ? old.market
+                  : d.market,
+              sources: [
+                ...new Map(
+                  [...old.sources, ...d.sources].map((s) => [s.id, s]),
+                ).values(),
+              ],
+            }));
+        })
+        .catch(() => {})
+        .finally(() => {
+          pending = false;
+        });
+    };
+    update();
+    const timer = window.setInterval(update, 60000);
+    document.addEventListener("visibilitychange", update);
+    window.addEventListener("focus", update);
+    return () => {
+      controller.abort();
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", update);
+      window.removeEventListener("focus", update);
+    };
   }, []);
   useEffect(() => {
     const f = (e: KeyboardEvent) => {
@@ -319,7 +349,9 @@ export default function App() {
       selected.includes(s.ticker) &&
       (companyFilter === "all" || s.ticker === companyFilter),
   );
-  const filingChecked = data.filing_coverage?.status === "checked";
+  const filingChecked = ["checked", "partial"].includes(
+    data.filing_coverage?.status || "",
+  );
   const active = stories[storyIndex % Math.max(1, stories.length)];
   const prices = data.market.prices,
     price = prices[ticker] || dynamicPrice;
@@ -683,9 +715,11 @@ export default function App() {
                 <div className="replay-caption">
                   <AlertCircle size={13} />
                   <span>
-                    {filingChecked
-                      ? `NSE coverage checked ${data.filing_coverage?.checked_at ? date(data.filing_coverage.checked_at, true) : ""} · ${data.filing_coverage?.verified_count} verified attachments · Window: ${windowMode}`
-                      : "Current exchange coverage is unavailable. Historical stories are kept separate."}
+                    {data.feed_status
+                      ? `${data.feed_status.state === "fresh" ? "Automatic feed" : data.feed_status.state === "stale" ? "Feed delayed - cached filings" : "Bundled baseline"} · Last verified ${data.feed_status.last_success_at ? new Date(data.feed_status.last_success_at).toLocaleString("en-IN", { timeZone: "Asia/Kolkata", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "unavailable"} IST · ${data.filing_coverage?.status === "partial" ? "Some attachments unavailable · " : ""}Window: ${windowMode}`
+                      : filingChecked
+                        ? `NSE coverage checked ${data.filing_coverage?.checked_at ? date(data.filing_coverage.checked_at, true) : ""} · ${data.filing_coverage?.verified_count} verified attachments · Window: ${windowMode}`
+                        : "Current exchange coverage is unavailable. Historical stories are kept separate."}
                   </span>
                 </div>
               )}

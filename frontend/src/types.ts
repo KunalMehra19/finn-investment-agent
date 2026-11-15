@@ -85,6 +85,12 @@ export type Ledger = {
   calculation: string;
 };
 export type Dataset = {
+  feed_status?: {
+    state: string;
+    message?: string;
+    last_attempt_at?: string;
+    last_success_at?: string;
+  };
   companies: Company[];
   sources: Source[];
   stories: Story[];

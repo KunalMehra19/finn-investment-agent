@@ -1,5 +1,8 @@
 name: Verify FINN
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 permissions:
   contents: read
 jobs:
@@ -21,3 +24,4 @@ jobs:
       - run: npm run build
       - run: node scripts/build-worker.mjs
       - run: node tests/worker-smoke.mjs
+      - run: node tests/worker-feed-smoke.mjs

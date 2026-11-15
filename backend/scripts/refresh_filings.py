@@ -8,6 +8,7 @@ import pymupdf
 from ingest import acquire
 ROOT=Path(__file__).resolve().parents[2];DATA=ROOT/'backend/data'
 def main():
+    (DATA/'pdfs').mkdir(parents=True,exist_ok=True)
     now=datetime.now(ZoneInfo('Asia/Kolkata'));start=now-timedelta(days=7)
     companies={c['ticker'] for c in json.loads((DATA/'companies.json').read_text())}
     status={'status':'unavailable','from':start.isoformat(),'to':now.isoformat(),'checked_at':now.isoformat(),'message':'Current exchange coverage could not be retrieved.','records':[]}
@@ -21,14 +22,16 @@ def main():
         relevant=[r for r in rows if r.get('symbol') in companies]
         status.update(status='checked',records=relevant,message='NSE announcements checked for all 15 watchlist symbols. Attachments are independently verified.')
     except Exception as e:status['error']=type(e).__name__
+    (DATA/'filing_attempt.json').write_text(json.dumps({k:v for k,v in status.items() if k!='records'}),encoding='utf-8')
     if status['status']=='unavailable':
         print(json.dumps(status));print('Keeping prior filing snapshot, if available.');return
     (DATA/'filings_refresh.json').write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({k:v for k,v in status.items() if k!='records'}));print('Relevant records:',len(status['records']))
-    library=json.loads((DATA/'library.json').read_text(encoding='utf-8'))
+    library=json.loads((DATA/'library.json').read_text(encoding='utf-8')) if (DATA/'library.json').exists() else []
     manifest=json.loads((DATA/'source_manifest.json').read_text(encoding='utf-8'))
-    stories=[];seen=set()
+    stories=[];seen=set();failures=0
     with sqlite3.connect(DATA/'finn.sqlite') as db:
+        db.execute('CREATE VIRTUAL TABLE IF NOT EXISTS pages USING fts5(source_id UNINDEXED,ticker UNINDEXED,page UNINDEXED,text)')
         for record in status['records'][:40]:
             url=record.get('attchmntFile','');ticker=record['symbol'];desc=record.get('desc','Company update');body=record.get('attchmntText',desc)
             if (ticker,url) in seen:continue
@@ -57,10 +60,17 @@ def main():
                 display={'Orders':'New orders. A fresh look at the pipeline.','Management':'A change at the board table.','Transcript':'From the call. To the evidence.','Results':'The latest numbers. The original source.'}.get(category,desc+'.')
                 stories.append({'id':sid,'ticker':ticker,'display_title':display,'title':title,'summary':body[:500],'why':why,'source_id':sid,'page':1,'published':published,'timestamp_precision':'second','category':category,'priority':priority,'origin':'NSE filing','routine':category=='Routine'})
                 print(f'{ticker}: {category} attachment verified ({len(pdf)} pages)',flush=True)
-            except Exception as e:print(f'{ticker}: attachment unavailable ({type(e).__name__})',flush=True)
+            except Exception as e:
+                failures+=1;print(f'{ticker}: attachment unavailable ({type(e).__name__})',flush=True)
     stories.sort(key=lambda s:(s['priority'],s['published']),reverse=True)
     coverage={k:v for k,v in status.items() if k!='records'};coverage['metadata_count']=len(status['records']);coverage['verified_count']=len(stories)
-    (DATA/'current_filings.json').write_text(json.dumps({'stories':stories,'coverage':coverage},ensure_ascii=False,indent=2),encoding='utf-8')
+    coverage['status']='checked' if failures==0 and len(status['records'])<=40 else 'partial'
+    if (DATA/'current_filings.json').exists():
+        prior=json.loads((DATA/'current_filings.json').read_text(encoding='utf-8'))
+        merged={s['id']:s for s in prior['stories'] if datetime.fromisoformat(s['published'])>=start}
+        merged.update({s['id']:s for s in stories});stories=sorted(merged.values(),key=lambda s:(s['priority'],s['published']),reverse=True)
+    coverage['verified_count']=len(stories)
+    tmp=DATA/'current_filings.tmp';tmp.write_text(json.dumps({'stories':stories,'coverage':coverage},ensure_ascii=False,indent=2),encoding='utf-8');tmp.replace(DATA/'current_filings.json')
     (DATA/'library.json').write_text(json.dumps(library,ensure_ascii=False),encoding='utf-8')
     (DATA/'source_manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
 

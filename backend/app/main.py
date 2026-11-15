@@ -13,6 +13,7 @@ from dotenv import load_dotenv
 from .market import load_market,refresh_market
 from .research import answer_question,dataset
 from .discovery import source_by_id
+from .feed import overlay
 
 ROOT=Path(__file__).resolve().parents[2];DATA=ROOT/'backend/data'
 load_dotenv(ROOT/'.env')
@@ -37,7 +38,7 @@ def health():
 
 @app.get('/api/snapshot')
 def snapshot():
-    d=dataset();d['market']=load_market();return d
+    d=overlay(dataset());d['market']=load_market();return d
 
 @app.get('/api/watchlist')
 def watchlist():
@@ -45,7 +46,7 @@ def watchlist():
 
 @app.get('/api/briefing')
 def briefing(window:str=Query('24h',pattern='^(24h|7d)$'),mode:str=Query('current',pattern='^(current|replay)$')):
-    d=dataset();cutoff=datetime.now(timezone.utc)-timedelta(days=7 if window=='7d' else 1)
+    d=overlay(dataset());cutoff=datetime.now(timezone.utc)-timedelta(days=7 if window=='7d' else 1)
     stories=d['stories'] if mode=='replay' else [s for s in d.get('current_stories',[]) if cutoff<=datetime.fromisoformat(s['published'])<=datetime.now(timezone.utc)]
     # De-duplicate a filing notified through multiple channels and sort materiality first.
     stories=list({(s['ticker'],s['source_id']):s for s in stories}.values())
@@ -54,7 +55,7 @@ def briefing(window:str=Query('24h',pattern='^(24h|7d)$'),mode:str=Query('curren
 
 @app.get('/api/company/{ticker}')
 async def company(ticker:str,request:Request):
-    t=symbol(ticker);d=dataset();c=next((c for c in d['companies'] if c['ticker']==t),None)
+    t=symbol(ticker);d=overlay(dataset());c=next((c for c in d['companies'] if c['ticker']==t),None)
     if c:return {'company':c,'price':load_market().get('prices',{}).get(t),'facts':d['facts'].get(t,[]),'documents':[s for s in d['sources'] if s['ticker']==t],'status':'verified' if c['deep'] else 'partial','as_of':d['coverage']['as_of']}
     rate_limit(request,'ticker',6)
     if t in dynamic_cache and dynamic_cache[t][0]>time.monotonic()-43200:return dynamic_cache[t][1]
@@ -90,7 +91,7 @@ def ledger(ticker:str):
 
 @app.get('/api/sources/{source_id}')
 def sources(source_id:str):
-    result=next((s for s in dataset()['sources'] if s['id']==source_id),None) or source_by_id(source_id)
+    result=next((s for s in overlay(dataset())['sources'] if s['id']==source_id),None) or source_by_id(source_id)
     if not result:raise HTTPException(404,'Source not found')
     return result
 

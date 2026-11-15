@@ -1,5 +1,6 @@
 import data from "../backend/data/demo.json";
 import { discover, discoveredSources } from "./discovery.mjs";
+import { readFeed } from "./feed.mjs";
 
 export const normalize = (s) =>
   s
@@ -204,11 +205,21 @@ export function validateClaim(claim, passages) {
 export async function api(request, env, passages, cachedSources = []) {
   const u = new URL(request.url),
     path = u.pathname;
-  const snapshot = () => ({
+  const baseSnapshot = () => ({
     ...data,
     sources: [...data.sources, ...cachedSources],
     market: marketOverride || data.market,
   });
+  const feedPath =
+    path === "/api/snapshot" ||
+    path === "/api/briefing" ||
+    path.startsWith("/api/sources/") ||
+    path === "/api/refresh";
+  const live = feedPath
+    ? await readFeed(baseSnapshot(), env.FINN_FEED_URL)
+    : null;
+  const snapshot = () =>
+    live ? { ...live, market: marketOverride || live.market } : baseSnapshot();
   if (path === "/api/health")
     return json({
       status: "ready",
@@ -235,12 +246,12 @@ export async function api(request, env, passages, cachedSources = []) {
       stories:
         u.searchParams.get("mode") === "replay"
           ? data.stories
-          : (data.current_stories || []).filter(
+          : (snapshot().current_stories || []).filter(
               (s) =>
                 new Date(s.published).valueOf() >= cutoff &&
                 new Date(s.published).valueOf() <= Date.now(),
             ),
-      coverage: data.filing_coverage || {
+      coverage: snapshot().filing_coverage || {
         status: "unavailable",
         message: data.coverage.filings,
       },
@@ -249,7 +260,7 @@ export async function api(request, env, passages, cachedSources = []) {
     });
   }
   if (path.startsWith("/api/sources/")) {
-    const s = [...data.sources, ...cachedSources, ...discoveredSources()].find(
+    const s = [...snapshot().sources, ...discoveredSources()].find(
       (s) => s.id === path.split("/").at(-1),
     );
     return s ? json(s) : json({ detail: "Source not found" }, 404);

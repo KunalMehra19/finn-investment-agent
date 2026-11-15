@@ -10,6 +10,8 @@ backend/data/market.json
 backend/data/library.json
 backend/data/dynamic_library.json
 backend/data/filings_refresh.json
+backend/data/live_feed.json
+backend/data/filing_attempt.json
 .pytest_cache/
 artifacts/
 outputs/

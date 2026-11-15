@@ -68,7 +68,7 @@ Seed comparison arithmetic is performed in Python. Banks use NII/NIM rather than
 - Daily move: `(latest completed close / preceding close − 1) × 100`.
 - Relative volume: `latest volume / mean(previous 20 completed-session volumes)`, excluding the latest session from the baseline.
 - A session is withheld before 16:00 IST. Failed refreshes retain the last verified snapshot. Corporate actions may affect unadjusted changes.
-- In-app refresh updates market data. Filing refresh uses the ingestion script and a new snapshot deployment; it is not continuous exchange surveillance.
+- In-app refresh updates market data. Filing updates use a scheduled NSE collector every 30 minutes; the open app polls the verified feed every minute. GitHub schedules may be delayed, and exchange failures retain the previous feed with a freshness warning.
 - Dynamic acquisition: roughly 16 seconds, one PDF, 5 MB, at most 80 pages, allowlisted HTTPS archive domains and bounded parsing. Scanned/blocked/oversized sources can remain unavailable.
 - AI calls use small per-visitor and per-process limits. These caches and limits are sized for a demo, not distributed production abuse prevention.
 
@@ -113,6 +113,16 @@ For a single-process production preview, run `npm run build`, restart FastAPI an
 
 ## Refresh the baseline
 
+The automatic filing feed uses GitHub Actions at minutes 15 and 45 each hour, a separate `data` branch for verified JSON, runtime feed loading and one-minute frontend polling. See [Automatic feed](docs/AUTOMATIC_FEED_REVIEW.md) for verification, setup and limitations. Filing updates require no application redeployment after the initial feed-enabled Worker deployment.
+
+For an automatic local collector, run this alongside FastAPI and Vite:
+
+```powershell
+.\.venv\Scripts\python.exe -m backend.scripts.auto_feed --interval 1800
+```
+
+The following commands rebuild the bundled baseline manually:
+
 ```powershell
 .\.venv\Scripts\python.exe backend/scripts/refresh_market.py
 .\.venv\Scripts\python.exe backend/scripts/refresh_filings.py
@@ -130,6 +140,7 @@ npm test
 npm run build
 node scripts/build-worker.mjs
 node tests/worker-smoke.mjs
+node tests/worker-feed-smoke.mjs
 ```
 
 Explicit live checks, with a local key:
@@ -175,7 +186,7 @@ submission/          Email-ready summary, covering email and checklist
 
 No trading, P&L, broker execution, login, billing, OS notifications, voice or secondary-news investment research. The ledger is a verified historical sample, not an exhaustive four-quarter scorecard. Annual-report coverage is selective. Dynamic research requires an accessible, parseable original attachment and can fail honestly.
 
-Next steps: scheduled filing ingestion, broader annual reports, a fixed retrieval evaluation set, stronger claim-entailment checks and durable public quotas/caching. These were left out to protect the focused evaluator journey.
+Next steps: broader annual reports, a fixed retrieval evaluation set, deeper analysis of new filings, stronger claim-entailment checks and durable public quotas/caching. These were left out to protect the focused evaluator journey.
 
 ## Handoff and verification
 
