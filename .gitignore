@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.env
+.venv/
+__pycache__/
+*.pyc
+backend/data/*.sqlite*
+backend/data/pdfs/
+backend/data/market.json
+backend/data/library.json
+backend/data/filings_refresh.json
+.pytest_cache/
+artifacts/
+*.tar.gz
+*.tsbuildinfo

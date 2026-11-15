@@ -1,0 +1,17 @@
+[
+{"ticker":"RELIANCE","name":"Reliance Industries","short":"Reliance","sector":"Diversified","color":"#7b633c","initials":"R","deep":true},
+{"ticker":"TCS","name":"Tata Consultancy Services","short":"TCS","sector":"Information technology","color":"#645375","initials":"tcs","deep":true},
+{"ticker":"HDFCBANK","name":"HDFC Bank","short":"HDFC Bank","sector":"Banking","color":"#344b70","initials":"H","deep":true},
+{"ticker":"BHARTIARTL","name":"Bharti Airtel","short":"Airtel","sector":"Telecommunications","color":"#b34f47","initials":"a","deep":true},
+{"ticker":"SUNPHARMA","name":"Sun Pharmaceutical Industries","short":"Sun Pharma","sector":"Pharmaceuticals","color":"#b16f3a","initials":"S","deep":true},
+{"ticker":"INFY","name":"Infosys","short":"Infosys","sector":"Information technology","color":"#477b8d","initials":"In","deep":false},
+{"ticker":"ICICIBANK","name":"ICICI Bank","short":"ICICI Bank","sector":"Banking","color":"#9b653f","initials":"I","deep":false},
+{"ticker":"SBIN","name":"State Bank of India","short":"SBI","sector":"Banking","color":"#447b95","initials":"S","deep":false},
+{"ticker":"ITC","name":"ITC","short":"ITC","sector":"Consumer staples","color":"#3a5a80","initials":"ITC","deep":false},
+{"ticker":"HINDUNILVR","name":"Hindustan Unilever","short":"HUL","sector":"Consumer staples","color":"#465d9a","initials":"U","deep":false},
+{"ticker":"LT","name":"Larsen & Toubro","short":"L&T","sector":"Industrials","color":"#82733e","initials":"L&T","deep":false},
+{"ticker":"TITAN","name":"Titan Company","short":"Titan","sector":"Consumer discretionary","color":"#497777","initials":"T","deep":false},
+{"ticker":"MARUTI","name":"Maruti Suzuki India","short":"Maruti Suzuki","sector":"Automobiles","color":"#4c637d","initials":"M","deep":false},
+{"ticker":"ADANIPORTS","name":"Adani Ports & SEZ","short":"Adani Ports","sector":"Infrastructure","color":"#775884","initials":"A","deep":false},
+{"ticker":"NTPC","name":"NTPC","short":"NTPC","sector":"Utilities","color":"#4b7890","initials":"N","deep":false}
+]
