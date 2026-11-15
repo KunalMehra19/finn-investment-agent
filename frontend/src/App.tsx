@@ -235,7 +235,18 @@ export default function App() {
     dynamic ||
     data.companies[0];
   const getCompany = (t: string) =>
-    data.companies.find((c) => c.ticker === t) || company;
+    data.companies.find((c) => c.ticker === t) ||
+    (dynamic?.ticker === t
+      ? dynamic
+      : {
+          ticker: t,
+          name: t,
+          short: t,
+          sector: "NSE equity",
+          color: "var(--accent)",
+          initials: t.slice(0, 2),
+          deep: false,
+        });
   const source = (id: string, page?: number) => {
     const s = data.sources.find((s) => s.id === id);
     if (s) {

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "dynamic-HCLTECH-baf227e394b6",
+    "ticker": "HCLTECH",
+    "title": "HCL Technologies Limited has informed the Exchange about Transcript",
+    "kind": "Transcript",
+    "period": "Period in original document",
+    "published": "2026-10-15T22:38:20+05:30",
+    "url": "https://nsearchives.nseindia.in/corporate/HCLTECH_15102026223802_Transcript.pdf",
+    "pages": 26,
+    "page": 1,
+    "excerpt": "",
+    "status": "verified",
+    "sha256": "baf227e394b6f6be0659c3c482d707ffc62e98c9bfe248d417560d3527af75ed",
+    "retrieved_at": "2026-11-15T23:03:22.267604+05:30"
+  },
+  {
+    "id": "dynamic-ASIANPAINT-5194bb148389",
+    "ticker": "ASIANPAINT",
+    "title": "Asian Paints Limited has informed the Exchange about Transcript of the investor conference call held on 29th October 2026 on the performance of the Company for the quarter and half year ended 30th September 2026",
+    "kind": "Transcript",
+    "period": "Period in original document",
+    "published": "2026-11-03T18:24:12+05:30",
+    "url": "https://nsearchives.nseindia.in/corporate/ASIANPAINT_03112026182217_Stock_exchange_intimation_Transcript_Q2FY26.pdf",
+    "pages": 34,
+    "page": 1,
+    "excerpt": "",
+    "status": "verified",
+    "sha256": "5194bb1483895afd0e5f41ebfab2c9cc29913ee850c7cb480a2d48cde126f4bf",
+    "retrieved_at": "2026-11-15T23:03:23.261541+05:30"
+  },
+  {
+    "id": "dynamic-AXISBANK-e0fc5d635cba",
+    "ticker": "AXISBANK",
+    "title": "Axis Bank Limited has informed the Exchange about Transcript",
+    "kind": "Transcript",
+    "period": "Period in original document",
+    "published": "2026-10-26T20:32:58+05:30",
+    "url": "https://nsearchives.nseindia.in/corporate/AXISBANK1_26102026203250_SignedSEIntimationQ2FY27EarningsCallTranscript.pdf",
+    "pages": 1,
+    "page": 1,
+    "excerpt": "",
+    "status": "verified",
+    "sha256": "e0fc5d635cba1ac41a6931141525dc27d31f0945ee67e28e479e02c1b54ff0a7",
+    "retrieved_at": "2026-11-15T23:03:24.485648+05:30"
+  }
+]

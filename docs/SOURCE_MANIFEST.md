@@ -1,5 +1,7 @@
 # Verified source manifest
 
+Supplemental primary documents acquired through generic ticker discovery are recorded with original URLs, hashes, page counts and dates in [prewarmed_sources.json](../backend/data/prewarmed_sources.json). These caches contain source passages, not pre-written research answers.
+
 All entries were fetched as genuine PDFs from the URL shown. Page numbers in FINN refer to PDF file pages, including exchange cover letters. No PDF bundles are committed.
 
 Snapshot retrieved: 2026-11-15T21:40:45.313218+05:30

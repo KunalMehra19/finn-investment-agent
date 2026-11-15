@@ -81,12 +81,16 @@ async def answer_question(ticker,question):
     try:
         async with httpx.AsyncClient(timeout=18) as client:
             response=await client.post(f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent',headers={'x-goog-api-key':key},json={'contents':[{'parts':[{'text':prompt}]}],'generationConfig':{'responseMimeType':'application/json','responseJsonSchema':Synthesis.model_json_schema(),'temperature':0.1,'maxOutputTokens':2500,**({'thinkingConfig':{'thinkingBudget':0}} if model.startswith('gemini-2.5-flash') else {})}})
+            fallback_model=os.getenv('GEMINI_FALLBACK_MODEL','gemini-2.5-flash-lite')
+            if response.status_code==429 and model!=fallback_model:
+                model=fallback_model
+                response=await client.post(f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent',headers={'x-goog-api-key':key},json={'contents':[{'parts':[{'text':prompt}]}],'generationConfig':{'responseMimeType':'application/json','responseJsonSchema':Synthesis.model_json_schema(),'temperature':0.1,'maxOutputTokens':2500,**({'thinkingConfig':{'thinkingBudget':0}} if model.startswith('gemini-2.5-flash') else {})}})
             response.raise_for_status();raw=response.json()['candidates'][0]['content']['parts']
             finish_reason=response.json()['candidates'][0].get('finishReason')
             parsed=Synthesis.model_validate_json(''.join(p.get('text','') for p in raw if not p.get('thought')))
         valid=[c for c in parsed.claims if validate_claim(c,passages,{s['id'] for s in data['sources']+extra['sources']})]
         if not valid:raise ValueError('No supported claims')
-        result={'conclusion':valid[0].title,'insights':[{'title':c.title,'text':c.text,'source_id':c.source_id,'page':c.page,'tags':'','supporting_excerpt':c.supporting_excerpt} for c in valid],'sources':extra['sources'],'unknowns':parsed.unknowns+['These are dated primary documents; subsequent developments may not be reflected.'],'engine':'Gemini · citations checked','status':'verified' if len(valid)==len(parsed.claims) else 'partial','as_of':data['coverage']['as_of']}
+        result={'conclusion':valid[0].title,'insights':[{'title':c.title,'text':c.text,'source_id':c.source_id,'page':c.page,'tags':'','supporting_excerpt':c.supporting_excerpt} for c in valid],'sources':extra['sources'],'unknowns':parsed.unknowns+['These are dated primary documents; subsequent developments may not be reflected.'],'engine':'Gemini · citations checked','model':model,'status':'verified' if len(valid)==len(parsed.claims) else 'partial','as_of':data['coverage']['as_of']}
         with sqlite3.connect(DATA/'finn.sqlite') as db:
             db.execute('INSERT OR REPLACE INTO analysis_cache VALUES(?,?,?)',(digest,json.dumps(result),time.time()))
         return result

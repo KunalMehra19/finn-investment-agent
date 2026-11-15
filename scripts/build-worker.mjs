@@ -39,7 +39,14 @@ try {
     "Full local library unavailable. Building with verified short excerpts; run ingestion for full retrieval.",
   );
 }
-const passages = library.flatMap((d) =>
+let supplemental = [];
+try {
+  supplemental = JSON.parse(
+    await fs.readFile("backend/data/dynamic_library.json", "utf8"),
+  );
+} catch {}
+const cachedSources = supplemental.map(({ content, ...metadata }) => metadata);
+const passages = [...library, ...supplemental].flatMap((d) =>
   (d.kind === "Annual report" ? d.content.slice(0, 8) : d.content).map((p) => ({
     ticker: d.ticker,
     source_id: d.id,
@@ -50,9 +57,10 @@ const passages = library.flatMap((d) =>
 const entry = `import {api} from './worker/api.mjs';
 const assets=${JSON.stringify(assets)};
 const passages=${JSON.stringify(passages)};
+const cachedSources=${JSON.stringify(cachedSources)};
 export default {async fetch(request,env,ctx){
 const url=new URL(request.url);
-if(url.pathname.startsWith('/api/')){try{return await api(request,env,passages)}catch{return new Response(JSON.stringify({detail:'Research is temporarily unavailable.'}),{status:503,headers:{'Content-Type':'application/json'}})}}
+if(url.pathname.startsWith('/api/')){try{return await api(request,env,passages,cachedSources)}catch{return new Response(JSON.stringify({detail:'Research is temporarily unavailable.'}),{status:503,headers:{'Content-Type':'application/json'}})}}
 if(!['GET','HEAD'].includes(request.method))return new Response('Method not allowed',{status:405});
 const asset=assets[url.pathname==='/'?'/index.html':url.pathname];
 if(!asset)return new Response('Not found',{status:404});

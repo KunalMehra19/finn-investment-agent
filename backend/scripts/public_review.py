@@ -12,7 +12,7 @@ with httpx.Client(timeout=50,follow_redirects=True) as client:
         rows.append(row);print(json.dumps(row),flush=True)
     for ticker,question in [('TCS','What changed in operating margins from FY25 to FY26?'),('SUNPHARMA','How did R&D spending compare with management guidance?'),('HCLTECH','Summarize management business outlook and risks from the available earnings call.')]:
         start=time.monotonic();r=client.post(BASE+'/api/research',json={'ticker':ticker,'question':question});a=r.json()
-        row={'path':'/api/research','ticker':ticker,'http_status':r.status_code,'engine':a.get('engine'),'status':a.get('status'),'claims':len(a.get('insights',[])),'dynamic_sources':len(a.get('sources',[])),'seconds':round(time.monotonic()-start,2)}
+        row={'path':'/api/research','ticker':ticker,'http_status':r.status_code,'engine':a.get('engine'),'model':a.get('model'),'ai_status':a.get('ai_status'),'status':a.get('status'),'claims':len(a.get('insights',[])),'dynamic_sources':len(a.get('sources',[])),'seconds':round(time.monotonic()-start,2)}
         rows.append(row);print(json.dumps(row),flush=True)
         for i in a.get('insights',[])[:2]:
             source=client.get(BASE+'/api/sources/'+i['source_id']);assert source.status_code==200,'Citation failed';assert i['page']<=source.json()['pages']

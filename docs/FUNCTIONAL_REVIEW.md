@@ -5,7 +5,7 @@
 - Real Gemini model discovery verified the provided key without logging it. Local and hosted keys are server-side secrets.
 - Real answers for Reliance, TCS, HDFC Bank, Airtel and Sun Pharma returned supported Gemini claims; unsupported portions were discarded as partial where necessary.
 - HCLTECH, outside the curated collection, retrieved an original 26-page NSE transcript and produced a cited research answer through the generic discovery path. The live result file records source IDs/pages and elapsed times.
-- Eleven Python tests exercise completed-session filtering, exclusion of the latest volume from its baseline, five-company coverage, guidance calculations, real page references, invalid symbols/requests, citation rejection (including invented title numbers), allowed PDF domains and provider-timeout fallback.
+- Twelve Python tests exercise completed-session filtering, exclusion of the latest volume from its baseline, five-company coverage, guidance calculations, real page references, invalid symbols/requests, citation rejection (including invented title numbers), allowed PDF domains and provider-timeout fallback.
 - Four Node tests cover the 15 market snapshots, factual source locations, hosted claim rejection and null-volume/intraday handling.
 - Hosted Worker smoke checks cover HTML/assets, health, watchlist, snapshot, current briefing, ledger, original source lookup, invalid inputs and keyless research.
 - TypeScript and Vite production builds passed. A GitHub Actions workflow repeats offline checks from a clean clone with fixture-based FTS data and no API key.
@@ -21,7 +21,8 @@
 5. Added a hosted validated-answer cache and rejected null market volumes.
 6. Included linked original promise/outcome pages in retrieval when the curated evidence map is relevant.
 7. Made tests independent of ignored local SQLite/PDF files so a clean clone can verify offline.
-8. Formatted the frontend/hosted source, documented deployment/setup and prepared evaluator deliverables.
+8. Added a single Flash-Lite fallback for Google quota responses, with a regression test. Prewarmed three primary-document caches through the generic discovery path to reduce dependence on exchange access from the hosting region.
+9. Formatted the frontend/hosted source, documented deployment/setup and prepared evaluator deliverables.
 
 ## Limits
 

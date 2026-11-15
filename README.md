@@ -27,6 +27,8 @@ Built for the ENAM AI Engineer Build Challenge. This is a focused evaluator prot
 | Guidance vs. Outcome | Three historical comparisons across TCS and Sun Pharma, with Met / Missed / Unclear and dual citations |
 | Generalization | Bounded original-document discovery for unfamiliar tickers, rather than hardcoded unseen-company answers |
 
+Three additional original-document caches (HCLTECH, ASIANPAINT and AXISBANK) are prewarmed through the generic discovery script for demo resilience. They contain primary passages, not pre-written research answers.
+
 The baseline includes **15 real market snapshots**, **35 verified original documents**, **five historical replay stories**, a recent NSE filing snapshot, and **three guidance comparisons**. Reliance, TCS, HDFC Bank, Bharti Airtel and Sun Pharma have curated financial research; L&T also has a current-order analysis. Current stories age out of real-time windows. Historical events retain their actual dates and never appear as fresh filings.
 
 ## Product and engineering choices
@@ -42,7 +44,7 @@ The ledger is an accountability tool, not a management score. Spending below a s
 | Market data | yfinance / Yahoo Finance EOD |
 | Original documents | NSE and issuer PDFs, signature/hash checks, PyMuPDF |
 | Retrieval | SQLite FTS5 locally; bounded keyword retrieval in hosted adapter |
-| AI | Gemini 2.5 Flash, structured JSON, validation and cached answers |
+| AI | Gemini 2.5 Flash with one Flash-Lite quota fallback, structured JSON, validation and cached answers |
 | Hosted runtime | Cloudflare Worker serving frontend + API; `unpdf` for dynamic PDF text extraction |
 | Persistence | Local SQLite/files; browser localStorage; bundled durable seed and bounded hosted memory caches |
 
@@ -54,7 +56,7 @@ The Worker adapter makes the hosted prototype self-contained without a separate 
 2. For a ticker without indexed pages, try the official NSE announcement route for the preceding 90 days and at most one suitable transcript/report/results PDF.
 3. Ask Gemini for short claims with a real source ID, PDF page and supporting excerpt. Questions and document contents are untrusted data, not instructions.
 4. Validate the source, page, normalized exact excerpt, excerpt length and numeric inputs. Equivalent decimal formats and fiscal labels are normalized; numerical unit conversion is not delegated to the model.
-5. Remove unsupported claims. Cache validated answers for about 12 hours. Provider/key/quota/parse failures return available deterministic evidence and a clear limitation.
+5. On a provider 429 quota response, try the configured Flash-Lite model once; do not retry indefinitely. Remove unsupported claims. Cache validated answers for about 12 hours. Provider/key/quota/parse failures return available deterministic evidence and a clear limitation.
 
 Seed comparison arithmetic is performed in Python. Banks use NII/NIM rather than an industrial EBITDA template. Citation validation is conservative but cannot formally prove semantic entailment; material conclusions should still be checked against the original.
 
@@ -134,6 +136,8 @@ Explicit live checks, with a local key:
 .\.venv\Scripts\python.exe backend/scripts/verify_gemini.py
 .\.venv\Scripts\python.exe -m backend.scripts.live_review
 ```
+
+Optional cached-document preparation: `.\.venv\Scripts\python.exe -m backend.scripts.prewarm HCLTECH ASIANPAINT AXISBANK`.
 
 The Worker embeds built assets and original indexed passages server-side. Run ingestion before packaging for full coverage; without the local corpus, the build uses short verified excerpts with narrower AI coverage. Runtime secrets are configured independently and are never embedded in the bundle. `.openai/hosting.json` identifies the deployment. GitHub Actions verifies builds, data, validation and routes without secrets or live PDF downloads.
 

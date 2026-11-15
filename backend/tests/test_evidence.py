@@ -84,3 +84,20 @@ def test_provider_error_keeps_evidence(monkeypatch):
     result=asyncio.run(answer_question('TCS','Explain operating margins in these documents, test provider failure'))
     assert result['insights'] and 'Indexed evidence' in result['engine']
     assert any('temporarily unavailable' in u for u in result['unknowns'])
+
+def test_quota_uses_one_bounded_lite_fallback(monkeypatch):
+    import asyncio,httpx
+    from backend.app.research import answer_question
+    calls=[]
+    class QuotaClient:
+        def __init__(self,**kwargs):pass
+        async def __aenter__(self):return self
+        async def __aexit__(self,*args):pass
+        async def post(self,url,**kwargs):
+            calls.append(url)
+            if len(calls)==1:return httpx.Response(429,request=httpx.Request('POST',url))
+            body={'claims':[{'title':'Margin outlook','text':'Management expects improvement.','source_id':'tcs-fy25-call','page':20,'supporting_excerpt':'yes, we should be able to improve margins.'}],'unknowns':[]}
+            return httpx.Response(200,request=httpx.Request('POST',url),json={'candidates':[{'finishReason':'STOP','content':{'parts':[{'text':json.dumps(body)}]}}]})
+    monkeypatch.setenv('GEMINI_API_KEY','invalid-test-key');monkeypatch.setenv('GEMINI_MODEL','gemini-2.5-flash');monkeypatch.setattr(httpx,'AsyncClient',QuotaClient)
+    a=asyncio.run(answer_question('TCS','What changed in margins?'))
+    assert 'Gemini' in a['engine'] and len(calls)==2 and 'flash-lite' in calls[-1]

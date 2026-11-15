@@ -8,6 +8,7 @@ backend/data/*.sqlite*
 backend/data/pdfs/
 backend/data/market.json
 backend/data/library.json
+backend/data/dynamic_library.json
 backend/data/filings_refresh.json
 .pytest_cache/
 artifacts/
