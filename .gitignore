@@ -11,5 +11,6 @@ backend/data/library.json
 backend/data/filings_refresh.json
 .pytest_cache/
 artifacts/
+outputs/
 *.tar.gz
 *.tsbuildinfo
