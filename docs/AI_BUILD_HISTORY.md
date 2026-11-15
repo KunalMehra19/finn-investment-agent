@@ -25,8 +25,16 @@ Built in one Codex session on 15 November 2026 from the supplied FINN execution 
 
 ## Outstanding external setup
 
-Gemini key configuration; explicit evaluator sharing/public access; owner-selected GitHub repository; visual browser QA; owner review and submission of the covering note. No message has been sent to anyone.
+At the first build: Gemini setup, public sharing, GitHub and visual QA remained outstanding. The final handoff below records subsequent completion; rendered browser QA and manual email submission remain outstanding. No email has been sent.
 
 ## Visual refresh / 15 November 2026
 
 Following owner feedback, replaced the paper/olive theme with Midnight Signal: graphite, acid yellow, a horizontal desktop masthead and stronger sans typography. Replaced the single story card with a dedicated vertical reel feed, native touch snapping, bounded wheel navigation, direct issue selection, keyboard controls, saving, source actions and immersive mode. Research, ledger, watchlist, library and evidence sheets were redesigned together. The supplied frontend-design skill guided the implementation. See `DESIGN_REVIEW.md` for the rationale and verification limits. A fresh browser attempt was blocked by a saved preview permission; no visual-review claim is made.
+
+## Final functionality and submission handoff
+
+The owner supplied a Gemini credential. It was validated without logging the value, stored only in ignored local .env and a hosted runtime secret, and redacted from the exported chat. Live model calls were checked for all five core companies. The review corrected output-token exhaustion, fiscal-label/decimal validation, original comparison-page retrieval, null-volume handling, source-drawer integration and hosted answer caching.
+
+Added a bounded generic NSE discovery route and one-PDF parser for unfamiliar symbols. HCLTECH acquired a genuine 26-page transcript and returned cited claims without a pre-written answer. Tests use fixture FTS data and no key by default. Public source was prepared for KunalMehra19/finn-investment-agent, with a detailed README, CI checks, public demo homepage, redacted visible conversation, short approach summary, covering email draft and deliverables audit. The existing Git credential helper provided authorized repository access; no credential was committed. The supplied main PDF was reviewed as challenge context, not authorization to send email.
+
+Public endpoint results and remaining limits are recorded in the final functional review. No browser screenshot, touch or focus checks are claimed: saved preview permission still blocks that session.

@@ -59,3 +59,28 @@ def test_research_keyless_path_and_fts():
     a=response.json();assert len(a['insights'])>0
     assert all(any(s['id']==i['source_id'] for s in dataset()['sources']) for i in a['insights'])
     assert retrieve_pages('TCS','operating margin')
+
+def test_title_numbers_are_checked():
+    pages=[{'source_id':'source','page':1,'text':'Revenue was 100 crore.'}]
+    claim=Claim(title='Revenue of 999 crore',text='Revenue was 100 crore.',source_id='source',page=1,supporting_excerpt='Revenue was 100 crore.')
+    assert not validate_claim(claim,pages,{'source'})
+
+def test_untrusted_pdf_urls_are_rejected():
+    from backend.app.discovery import safe_url
+    assert safe_url('https://nsearchives.nseindia.in/corporate/report.pdf')
+    for url in ['http://nsearchives.nseindia.in/a.pdf','https://nsearchives.nseindia.in.evil.test/a.pdf','https://127.0.0.1/a.pdf','https://user:password@nsearchives.nseindia.in/a.pdf','https://nsearchives.nseindia.in:8080/a.pdf']:
+        assert not safe_url(url)
+
+def test_provider_error_keeps_evidence(monkeypatch):
+    import asyncio,httpx
+    from backend.app.research import answer_question
+    class FailedClient:
+        def __init__(self,**kwargs):pass
+        async def __aenter__(self):return self
+        async def __aexit__(self,*args):pass
+        async def post(self,*args,**kwargs):raise httpx.ConnectTimeout('Test timeout')
+    monkeypatch.setenv('GEMINI_API_KEY','invalid-test-key')
+    monkeypatch.setattr(httpx,'AsyncClient',FailedClient)
+    result=asyncio.run(answer_question('TCS','Explain operating margins in these documents, test provider failure'))
+    assert result['insights'] and 'Indexed evidence' in result['engine']
+    assert any('temporarily unavailable' in u for u in result['unknowns'])

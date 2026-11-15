@@ -1,0 +1,30 @@
+FINN — From Signal to Evidence
+
+Public demo: https://finn-research-desk.delicateloon4.chatgpt.site
+GitHub: https://github.com/KunalMehra19/finn-investment-agent
+AI conversation history: https://github.com/KunalMehra19/finn-investment-agent/blob/main/docs/CHAT_LOG_REDACTED.md
+
+WHAT WE BUILT
+FINN is a mobile-first Indian-equity intelligence prototype for a focused evaluator journey: notice a signal, investigate the business, and verify the original evidence. It combines a 15-company EOD watchlist and prioritized NSE filing digest with source-grounded Gemini research and a Guidance vs. Outcome ledger.
+
+PRODUCT APPROACH
+We avoided a blank chat landing page. The briefing is a manually controlled vertical reel feed with swipe/scroll snapping, an immersive reading mode, saving and persistent source actions. Material disclosures come before routine paperwork, which remains available. Current windows and historical replay are explicitly separate. The Midnight Signal visual system uses graphite, acid-yellow accents and strong typography across research, settings and evidence sheets.
+
+DATA AND AI
+Prices and volume are genuine completed-session Yahoo/yfinance records. Relative volume compares the latest session against the preceding 20 completed sessions, excluding the latest from its own baseline. Original issuer and exchange PDFs are verified, hashed and indexed by page. The baseline contains 35 verified originals and five core financial-research companies, plus a sourced L&T order analysis.
+
+Gemini 2.5 Flash receives retrieved original passages, not broker reports, news or an invitation to answer from memory. Structured claims must reference real source IDs/pages and exact short supporting excerpts. Numeric inputs are checked, unsupported claims are removed, and failures fall back to dated deterministic evidence. Validated answers are cached. The API key stays server-side and is excluded from source and chat exports.
+
+The signature ledger contains three manually checked historical comparisons across TCS and Sun Pharma. Every record has separate promise and actual evidence. Financial differences are calculated in Python, accounting bases are disclosed, and vague guidance remains Unclear rather than being forced into a pass/fail score.
+
+GENERALIZATION
+The engine accepts unfamiliar valid NSE symbols. It verifies market identity/data, then makes a bounded official NSE discovery attempt for an appropriate original PDF. This is not a table of hardcoded unseen-company answers. HCLTECH successfully retrieved and used a 26-page original transcript during the live review. Blocked or unsuitable sources produce an explicit partial state.
+
+TECHNICAL CHOICES
+React, TypeScript and Vite provide the interface. FastAPI, SQLite FTS5, PyMuPDF and yfinance support local ingestion/research. A small Cloudflare Worker adapter serves the public frontend/API together, including bounded PDF extraction through unpdf. Preferences live in browser localStorage. We deliberately avoided accounts, Redis, queues and infrastructure for scale.
+
+TRADE-OFFS AND NEXT STEPS
+This is a thin, evidence-first prototype: no trading, broker execution, P&L, voice, OS push notifications or continuous exchange surveillance. Filing snapshots are refreshed through the ingestion workflow. The ledger is a verified historical sample, not an exhaustive four-quarter scorecard. Annual-report coverage is selective; dynamic discovery depends on an accessible parseable original. Future work would broaden primary-document coverage, schedule ingestion, evaluate retrieval on a fixed question set and strengthen semantic claim verification.
+
+VERIFICATION
+Build, market/source integrity, citation rejection, provider-failure fallback, API/runtime smoke checks and real Gemini/provider calls were checked. Rendered browser/gesture QA remains unverified because a saved browser permission blocked preview access; the owner reviewed and approved the redesigned appearance. The repository documents actual checks and remaining limits separately.

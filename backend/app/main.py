@@ -12,6 +12,7 @@ from pydantic import BaseModel,Field
 from dotenv import load_dotenv
 from .market import load_market,refresh_market
 from .research import answer_question,dataset
+from .discovery import source_by_id
 
 ROOT=Path(__file__).resolve().parents[2];DATA=ROOT/'backend/data'
 load_dotenv(ROOT/'.env')
@@ -89,7 +90,7 @@ def ledger(ticker:str):
 
 @app.get('/api/sources/{source_id}')
 def sources(source_id:str):
-    result=next((s for s in dataset()['sources'] if s['id']==source_id),None)
+    result=next((s for s in dataset()['sources'] if s['id']==source_id),None) or source_by_id(source_id)
     if not result:raise HTTPException(404,'Source not found')
     return result
 

@@ -1,0 +1,164 @@
+[
+  {
+    "ticker": "RELIANCE",
+    "question": "What drove revenue and earnings growth in FY25?",
+    "engine": "Gemini \u00b7 citations checked",
+    "status": "verified",
+    "claims": 5,
+    "dynamic_sources": 0,
+    "seconds": 3.99,
+    "citations": [
+      {
+        "source_id": "ril-fy25",
+        "page": 3
+      },
+      {
+        "source_id": "ril-fy25",
+        "page": 3
+      },
+      {
+        "source_id": "ril-fy25",
+        "page": 3
+      },
+      {
+        "source_id": "ril-fy25",
+        "page": 3
+      },
+      {
+        "source_id": "ril-fy25",
+        "page": 3
+      }
+    ],
+    "ai_status": null,
+    "finish_reason": null
+  },
+  {
+    "ticker": "TCS",
+    "question": "What changed in operating margins from FY25 to FY26?",
+    "engine": "Gemini \u00b7 citations checked",
+    "status": "verified",
+    "claims": 3,
+    "dynamic_sources": 0,
+    "seconds": 2.95,
+    "citations": [
+      {
+        "source_id": "tcs-fy25-call",
+        "page": 3
+      },
+      {
+        "source_id": "tcs-fy26-call",
+        "page": 8
+      },
+      {
+        "source_id": "tcs-fy25-call",
+        "page": 20
+      }
+    ],
+    "ai_status": null,
+    "finish_reason": null
+  },
+  {
+    "ticker": "HDFCBANK",
+    "question": "What do NII and net interest margin show?",
+    "engine": "Gemini \u00b7 citations checked",
+    "status": "partial",
+    "claims": 3,
+    "dynamic_sources": 0,
+    "seconds": 3.53,
+    "citations": [
+      {
+        "source_id": "hdfc-fy25",
+        "page": 1
+      },
+      {
+        "source_id": "hdfc-fy25",
+        "page": 1
+      },
+      {
+        "source_id": "hdfc-fy25",
+        "page": 1
+      }
+    ],
+    "ai_status": null,
+    "finish_reason": null
+  },
+  {
+    "ticker": "BHARTIARTL",
+    "question": "What drove mobile ARPU and revenue growth?",
+    "engine": "Gemini \u00b7 citations checked",
+    "status": "verified",
+    "claims": 5,
+    "dynamic_sources": 0,
+    "seconds": 3.75,
+    "citations": [
+      {
+        "source_id": "airtel-fy25",
+        "page": 1
+      },
+      {
+        "source_id": "airtel-fy25",
+        "page": 1
+      },
+      {
+        "source_id": "nse-1ab61b8444c1",
+        "page": 14
+      },
+      {
+        "source_id": "airtel-fy25",
+        "page": 2
+      },
+      {
+        "source_id": "airtel-fy25",
+        "page": 2
+      }
+    ],
+    "ai_status": null,
+    "finish_reason": null
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "question": "How did R&D spending compare with management guidance?",
+    "engine": "Gemini \u00b7 citations checked",
+    "status": "partial",
+    "claims": 1,
+    "dynamic_sources": 0,
+    "seconds": 2.55,
+    "citations": [
+      {
+        "source_id": "sun-fy24-call",
+        "page": 10
+      }
+    ],
+    "ai_status": null,
+    "finish_reason": null
+  },
+  {
+    "ticker": "HCLTECH",
+    "question": "Summarize management business outlook and risks from the available earnings call.",
+    "engine": "Gemini \u00b7 citations checked",
+    "status": "partial",
+    "claims": 4,
+    "dynamic_sources": 1,
+    "seconds": 5.22,
+    "citations": [
+      {
+        "source_id": "dynamic-HCLTECH-baf227e394b6",
+        "page": 20
+      },
+      {
+        "source_id": "dynamic-HCLTECH-baf227e394b6",
+        "page": 22
+      },
+      {
+        "source_id": "dynamic-HCLTECH-baf227e394b6",
+        "page": 22
+      },
+      {
+        "source_id": "dynamic-HCLTECH-baf227e394b6",
+        "page": 24
+      }
+    ],
+    "ai_status": null,
+    "finish_reason": null
+  }
+]

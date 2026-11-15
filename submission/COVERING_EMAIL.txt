@@ -1,0 +1,26 @@
+To: assessment@enam.com
+Subject: IIT Delhi – AI Engineer - 2027
+
+Dear ENAM team,
+
+Please find my submission for the AI Engineer Build Challenge: FINN — From Signal to Evidence.
+
+Public prototype: https://finn-research-desk.delicateloon4.chatgpt.site
+GitHub repository: https://github.com/KunalMehra19/finn-investment-agent
+AI conversation history (credentials redacted): https://github.com/KunalMehra19/finn-investment-agent/blob/main/docs/CHAT_LOG_REDACTED.md
+
+FINN combines a 15-company Indian-equity EOD watchlist and prioritized NSE filing briefing with primary-source Gemini research. The interaction is a manually controlled vertical Signal Room: notice a development, investigate it, and open the original evidence. A Guidance vs. Outcome ledger compares exact management statements against later reported results, with two independently verifiable sources per finding.
+
+I prioritized a compact working investor journey over breadth or scaling infrastructure. The implementation uses React/TypeScript, a Python ingestion/research backend, SQLite full-text retrieval and a small hosted Worker adapter. Answers use original company/exchange documents, validate citations and numeric inputs, and fall back honestly on missing data or provider failure. Unfamiliar NSE tickers receive bounded primary-document discovery rather than hardcoded demo answers.
+
+Deliberate omissions include trading, accounts, OS push notifications and continuous market surveillance. The ledger is a verified historical sample and document coverage is selective. Next I would broaden annual-report coverage, schedule filing ingestion and evaluate retrieval/claim support more systematically.
+
+The repository includes a detailed README, demo guide, source manifest, verification report and redacted AI build history. I have attached a short approach summary for convenience.
+
+Regards,
+Kunal
+
+Suggested attachment: APPROACH_SUMMARY.txt
+Optional attachments: CHAT_LOG_REDACTED.md and FINN_Submission.zip
+
+Draft prepared for review. No email has been sent automatically.
