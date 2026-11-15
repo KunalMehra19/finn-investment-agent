@@ -423,6 +423,7 @@ export async function api(request, env, passages) {
         ],
       });
     budget++;
+    let aiStatus = "provider_unavailable";
     try {
       const model = env.GEMINI_MODEL || "gemini-2.5-flash";
       const schema = {
@@ -479,7 +480,11 @@ export async function api(request, env, passages) {
           signal: AbortSignal.timeout(18000),
         },
       );
-      if (!r.ok) throw Error();
+      if (!r.ok) {
+        aiStatus = "provider_" + r.status;
+        throw Error();
+      }
+      aiStatus = "invalid_model_json";
       const result = await r.json(),
         parsed = JSON.parse(
           result.candidates[0].content.parts
@@ -488,6 +493,7 @@ export async function api(request, env, passages) {
             .join(""),
         );
       if (!Array.isArray(parsed.claims)) throw Error();
+      aiStatus = "citation_validation";
       const valid = parsed.claims.filter((c) => validateClaim(c, pages));
       if (!valid.length) throw Error();
       const answer = {
@@ -517,6 +523,7 @@ export async function api(request, env, passages) {
     } catch {
       return json({
         ...partial(),
+        ai_status: aiStatus,
         unknowns: [
           ...partial().unknowns,
           "AI synthesis is temporarily unavailable. Showing indexed evidence instead.",
