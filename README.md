@@ -79,3 +79,5 @@ For a single-process local production preview, build the frontend first, then re
 - Automated browser inspection was declined by the browser access gate. Builds, API checks and data tests passed; visual desktop/390px browser QA remains unverified.
 
 See [the demo guide](docs/DEMO_GUIDE.md), [source manifest](docs/SOURCE_MANIFEST.md) and [build history](docs/AI_BUILD_HISTORY.md).
+
+The Midnight Signal redesign and vertical briefing reels are described in [the design review](docs/DESIGN_REVIEW.md). Reels support vertical swipes, wheel steps, arrows, Page Up/Down, Home/End, direct issue selection and an immersive view. There is no autoplay.
