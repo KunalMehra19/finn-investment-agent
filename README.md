@@ -2,6 +2,8 @@
 
 A mobile-first Indian-equity research desk: **notice a signal → investigate the business → verify the original evidence**.
 
+**[Read the one-page project report (PDF)](FINN_Project_Report.pdf)** - what we built, key decisions and trade-offs, deliberate omissions, and next steps.
+
 **[Open the public demo](https://finn-research-desk.delicateloon4.chatgpt.site)** · **[Demo guide](docs/DEMO_GUIDE.md)** · **[Source manifest](docs/SOURCE_MANIFEST.md)** · **[Redacted AI conversation](docs/CHAT_LOG_REDACTED.md)**
 
 Built for the ENAM AI Engineer Build Challenge. This is a focused evaluator prototype, with interaction, evidence quality and reliable fallbacks prioritized over scaling infrastructure. It provides information, not investment advice or trading execution.
