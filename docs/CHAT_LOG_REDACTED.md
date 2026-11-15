@@ -1,6 +1,6 @@
 # FINN — AI conversation export (redacted)
 
-Export of user-visible user and assistant messages from this project chat, in chronological order. API credentials are redacted. Internal reasoning, system/developer instructions and tool payloads are excluded. This is a snapshot during the final handoff; the final delivery message is not included.
+Chronological export of visible user and assistant messages from the project chat through final verification on 15 November 2026. Credentials are redacted. Internal reasoning, system/developer instructions and tool payloads are excluded. The final delivery message follows this export snapshot.
 
 ## 1. User
 
@@ -198,3 +198,32 @@ I found an existing authenticated GitHub account on this machine, so I can push 
 
 The final review is also tightening citation checks, adding an answer cache, and making newly retrieved documents available in the evidence drawer.
 
+## 28. Assistant / commentary
+
+The live review found two causes of unnecessary AI fallbacks: responses sometimes used the output budget before completing the JSON, and the numeric guard rejected valid fiscal-year labels. Those are fixed. Live Gemini checks now return cited answers for all five core companies, and HCLTECH successfully retrieved an original NSE transcript without a hardcoded answer.
+
+The public GitHub repository is created. I’m finishing the documentation and testing the deployed endpoints before the handoff.
+
+## 29. Assistant / commentary
+
+FINN is now public, and the source has been pushed to [GitHub](https://github.com/KunalMehra19/finn-investment-agent). The repository description and homepage both include the demo URL.
+
+I’m running unauthenticated checks against the deployed app now, including live Gemini research and citation lookup. The email-ready approach summary, covering email draft, deliverables checklist, and redacted chat export are prepared.
+
+## 30. Assistant / commentary
+
+The public app opens without login, and GitHub’s clean-clone CI checks passed. The deployed checks also confirmed live Gemini output for Sun Pharma.
+
+Some other hosted questions are falling back more often than their local checks did. I’m diagnosing that difference before calling the handoff complete; a configured key alone isn’t enough to prove the hosted research path is working reliably.
+
+## 31. Assistant / commentary
+
+The hosted fallback was caused by Google returning HTTP 429 quota responses. I’ve added a single bounded retry through Flash-Lite, with a regression test; if that also fails, FINN still returns the available source-backed evidence.
+
+I also cached original documents retrieved through the generic discovery engine for HCLTECH, Asian Paints and Axis Bank. These are source passages, not pre-written answers, and make the demo less dependent on NSE access from the hosting region.
+
+## 32. Assistant / commentary
+
+The deployed checks now pass: TCS and Sun Pharma returned verified Gemini answers through the quota fallback, and HCLTECH returned five cited claims from its original-document cache. The tested citation endpoints also resolved correctly. The latest GitHub CI run passed.
+
+I’m adding those results to the handoff, refreshing the redacted chat export, and creating the download ZIP. No email has been sent.

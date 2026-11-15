@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-15T17:27:09.087903+00:00",
+  "checked_at": "2026-11-15T17:37:00.762655+00:00",
   "base_url": "https://finn-research-desk.delicateloon4.chatgpt.site",
   "checks": [
     {
@@ -13,7 +13,7 @@
       "public_without_auth": true,
       "health": {
         "status": "ready",
-        "documents": 35,
+        "documents": 38,
         "eod_available": 15,
         "gemini_configured": true,
         "current_filings": "checked",
@@ -44,31 +44,37 @@
       "path": "/api/research",
       "ticker": "TCS",
       "http_status": 200,
-      "engine": "Indexed evidence \u00b7 no AI synthesis",
+      "engine": "Gemini \u00b7 citations checked",
+      "model": "gemini-2.5-flash-lite",
+      "ai_status": null,
       "status": "verified",
-      "claims": 2,
+      "claims": 3,
       "dynamic_sources": 0,
-      "seconds": 0.77
+      "seconds": 2.8
     },
     {
       "path": "/api/research",
       "ticker": "SUNPHARMA",
       "http_status": 200,
       "engine": "Gemini \u00b7 citations checked",
+      "model": "gemini-2.5-flash-lite",
+      "ai_status": null,
       "status": "verified",
-      "claims": 2,
+      "claims": 4,
       "dynamic_sources": 0,
-      "seconds": 2.42
+      "seconds": 2.38
     },
     {
       "path": "/api/research",
       "ticker": "HCLTECH",
       "http_status": 200,
-      "engine": "Indexed evidence",
-      "status": "partial",
-      "claims": 0,
-      "dynamic_sources": 0,
-      "seconds": 1.28
+      "engine": "Gemini \u00b7 citations checked",
+      "model": "gemini-2.5-flash",
+      "ai_status": null,
+      "status": "verified",
+      "claims": 5,
+      "dynamic_sources": 1,
+      "seconds": 3.58
     },
     {
       "path": "/api/company/BAD!SYMBOL",

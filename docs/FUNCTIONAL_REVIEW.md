@@ -31,3 +31,7 @@ Rendered desktop/390px, touch gestures and actual browser focus remain unverifie
 Dynamic discovery is best effort and exchange access can differ between local and hosted networks. It is capped and returns a partial state. Snapshots show their actual dates. Citation validation checks provenance and matching text, not a formal semantic proof of every paraphrase.
 
 Public deployment checks are recorded separately in `PUBLIC_ENDPOINT_REVIEW.json` after final publication.
+
+## Public endpoint result
+
+Unauthenticated checks passed for the app, health, watchlist, briefing, ledger and source endpoints. The deployed API returned verified Gemini answers for TCS (three supported claims), Sun Pharma (four) and HCLTECH (five, using a newly acquired primary-document cache). The first two exercised the Flash-Lite quota fallback; HCLTECH used Flash. Queried citation endpoints resolved to real source metadata and valid PDF page numbers. Invalid-symbol handling returned HTTP 400. GitHub Actions run 43741996445 completed successfully for the release source; final documentation updates are separate from application code.
