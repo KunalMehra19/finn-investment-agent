@@ -5,7 +5,7 @@
 1. GitHub Actions runs the existing Python NSE collector at minutes 15 and 45 each hour, or on manual dispatch. GitHub schedules are best effort and may be delayed.
 2. The collector verifies original attachment PDFs, hashes, timestamps and source metadata; classifies new events using category rules; ranks materiality; deduplicates; and retains routine records. New titles/summaries use original exchange metadata, not hardcoded company-event answers. Existing editorial enhancements are not required for new events.
 3. A public JSON feed is committed on the separate `data` branch. Main/application code is not rebuilt or redeployed per filing update. The workflow uses the built-in GitHub token; no Gemini key or personal token is needed. Only verified metadata/story text is published, not PDF contents or credentials.
-4. The Worker reads that feed at most once per minute, validates references/domains and retains its last good copy on failure. Cold starts fall back to the bundled snapshot. Data older than two hours is marked stale.
+4. The Worker reads that feed at most once per minute, validates references/domains and retains its last good copy on failure. GitHub's public raw-file CDN can add up to five minutes of caching after a feed commit. Cold starts fall back to the bundled snapshot. Data older than two hours is marked stale.
 5. The frontend fetches the API every minute while visible, on tab focus and on returning to the tab. Current-window filtering and the existing reel component render the new list; replay and research remain separate.
 
 Unchanged limitation: new filings are surfaced with factual exchange metadata and category-based significance, not automatically generated deep financial analysis. Existing research remains grounded in its explicitly dated indexed documents.
@@ -21,3 +21,10 @@ For initial hosted setup: push the workflow/code, deploy the feed-enabled Worker
 Tests cover adding a new event without changing replay/research, deduplication, missing/unsafe citations, future timestamps, cached failure state across subsequent requests, and cold-start fallback. Live NSE ingestion is checked separately; passing mocks does not prove the future GitHub scheduler or hosting region can reach NSE. Failures remain visible through freshness metadata.
 
 The 16 November 2026 local live review retrieved 25 announcements and verified 24 unique attachment-backed updates for the tracked companies. The built Worker integration check uses an HTTP feed containing a previously unknown filing/source ID and verifies that it reaches the snapshot, current briefing and source endpoint without changing replay or research.
+
+Hosted verification on 16 November 2026:
+
+- [GitHub CI](https://github.com/KunalMehra19/finn-investment-agent/actions/runs/43758761164) passed all 15 Python tests, eight Node tests, the production build, route smoke checks and the new-feed integration check.
+- [Initial collector run](https://github.com/KunalMehra19/finn-investment-agent/actions/runs/43758783980) retrieved 25 announcements, verified 24 unique attachments and created the public `data` branch.
+- [Second collector run](https://github.com/KunalMehra19/finn-investment-agent/actions/runs/43759123422) restored the previous feed and PDF cache, verified the current exchange data again, and published a later feed commit successfully.
+- The feed-enabled [public demo](https://finn-research-desk.delicateloon4.chatgpt.site) returned a fresh 24-story snapshot, the same current briefing, and verified source metadata for a newly collected filing.
